@@ -1,0 +1,190 @@
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| airline            |
+| animals            |
+| batch20            |
+| citiesdata         |
+| customer_details   |
+| empjoin            |
+| employee           |
+| employeebuiltin    |
+| hotel              |
+| hotel1             |
+| information_schema |
+| joinclass          |
+| movie              |
+| mydb               |
+| mysql              |
+| new_schema         |
+| performance_schema |
+| school             |
+| sql_hr             |
++--------------------+
+19 rows in set (0.05 sec)
+
+mysql> create database teachers_details
+    -> ;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> use teachers_details;
+Database changed
+mysql> create table teachers(id int primary key, name varchar(30) not null,department_name varchar(20),DoJ date,salary int not null, gender varchar(10));
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> desc teachers_details;
+ERROR 1146 (42S02): Table 'teachers_details.teachers_details' doesn't exist
+mysql> desc teachers;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| id              | int         | NO   | PRI | NULL    |       |
+| name            | varchar(30) | NO   |     | NULL    |       |
+| department_name | varchar(20) | YES  |     | NULL    |       |
+| DoJ             | date        | YES  |     | NULL    |       |
+| salary          | int         | NO   |     | NULL    |       |
+| gender          | varchar(10) | YES  |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+6 rows in set (0.02 sec)
+
+mysql> insert into teachers values(1,"Sharan","English",'2000-02-12',45000,'F');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into teachers values(3,"Beula","physics",'2005-02-12',55000,'F'),(2,"Rekha Ponraj","Maths",'2002-03-15',20000,'F');
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from teachers;
++----+--------------+-----------------+------------+--------+--------+
+| id | name         | department_name | DoJ        | salary | gender |
++----+--------------+-----------------+------------+--------+--------+
+|  1 | Sharan       | English         | 2000-02-12 |  45000 | F      |
+|  2 | Rekha Ponraj | Maths           | 2002-03-15 |  20000 | F      |
+|  3 | Beula        | physics         | 2005-02-12 |  55000 | F      |
++----+--------------+-----------------+------------+--------+--------+
+3 rows in set (0.00 sec)
+
+mysql> insert into teachers values(4,'Gajarath','art','2014-05-14',30000,'M'),(5,'Velusamy','Biology','2007-04-01',80000,'M'),(6,'Anushiya','chemistry','2015-05-14',35000,'F'),(7,'Fransis paul','physics','2014-04-21',35000,'M'),(8,'Mersha','computer','2000-01-01',12000,'M');
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from teachers;
++----+--------------+-----------------+------------+--------+--------+
+| id | name         | department_name | DoJ        | salary | gender |
++----+--------------+-----------------+------------+--------+--------+
+|  1 | Sharan       | English         | 2000-02-12 |  45000 | F      |
+|  2 | Rekha Ponraj | Maths           | 2002-03-15 |  20000 | F      |
+|  3 | Beula        | physics         | 2005-02-12 |  55000 | F      |
+|  4 | Gajarath     | art             | 2014-05-14 |  30000 | M      |
+|  5 | Velusamy     | Biology         | 2007-04-01 |  80000 | M      |
+|  6 | Anushiya     | chemistry       | 2015-05-14 |  35000 | F      |
+|  7 | Fransis paul | physics         | 2014-04-21 |  35000 | M      |
+|  8 | Mersha       | computer        | 2000-01-01 |  12000 | M      |
++----+--------------+-----------------+------------+--------+--------+
+8 rows in set (0.00 sec)
+
+mysql> select * from teachers where department_name = "computer";
++----+--------+-----------------+------------+--------+--------+
+| id | name   | department_name | DoJ        | salary | gender |
++----+--------+-----------------+------------+--------+--------+
+|  8 | Mersha | computer        | 2000-01-01 |  12000 | M      |
++----+--------+-----------------+------------+--------+--------+
+1 row in set (0.00 sec)
+
+mysql> select name from teachers where department_name like 'maths';
++--------------+
+| name         |
++--------------+
+| Rekha Ponraj |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> select name from teachers where department_name like 'histroy';
+Empty set (0.00 sec)
+
+mysql> select name,DoJ from teachers ORDER BY DoJ asc;
++--------------+------------+
+| name         | DoJ        |
++--------------+------------+
+| Mersha       | 2000-01-01 |
+| Sharan       | 2000-02-12 |
+| Rekha Ponraj | 2002-03-15 |
+| Beula        | 2005-02-12 |
+| Velusamy     | 2007-04-01 |
+| Fransis paul | 2014-04-21 |
+| Gajarath     | 2014-05-14 |
+| Anushiya     | 2015-05-14 |
++--------------+------------+
+8 rows in set (0.00 sec)
+
+mysql> select name,department_name,salary from teachers where gender='M';
++--------------+-----------------+--------+
+| name         | department_name | salary |
++--------------+-----------------+--------+
+| Gajarath     | art             |  30000 |
+| Velusamy     | Biology         |  80000 |
+| Fransis paul | physics         |  35000 |
+| Mersha       | computer        |  12000 |
++--------------+-----------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select count(name) from teachers where salary <= 12000;
++-------------+
+| count(name) |
++-------------+
+|           1 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select count(name) from teachers where salary <= 50000;
++-------------+
+| count(name) |
++-------------+
+|           6 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select * from teachers order by salary limit 1;
++----+--------+-----------------+------------+--------+--------+
+| id | name   | department_name | DoJ        | salary | gender |
++----+--------+-----------------+------------+--------+--------+
+|  8 | Mersha | computer        | 2000-01-01 |  12000 | M      |
++----+--------+-----------------+------------+--------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from teachers order by salary limit 2;
++----+--------------+-----------------+------------+--------+--------+
+| id | name         | department_name | DoJ        | salary | gender |
++----+--------------+-----------------+------------+--------+--------+
+|  8 | Mersha       | computer        | 2000-01-01 |  12000 | M      |
+|  2 | Rekha Ponraj | Maths           | 2002-03-15 |  20000 | F      |
++----+--------------+-----------------+------------+--------+--------+
+2 rows in set (0.00 sec)
+
+
+mysql> select * from teachers order by salary limit 1 offset 1;
++----+--------------+-----------------+------------+--------+--------+
+| id | name         | department_name | DoJ        | salary | gender |
++----+--------------+-----------------+------------+--------+--------+
+|  2 | Rekha Ponraj | Maths           | 2002-03-15 |  20000 | F      |
++----+--------------+-----------------+------------+--------+--------+
+1 row in set (0.00 sec)
+
+mysql> select avg(salary) as average_Salary from teachers where department_name = 'histroy';
++----------------+
+| average_Salary |
++----------------+
+|           NULL |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(salary) as average_Salary from teachers where department_name = 'physics';
++----------------+
+| average_Salary |
++----------------+
+|     45000.0000 |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> Terminal close -- exit!
