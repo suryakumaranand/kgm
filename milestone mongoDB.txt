@@ -1,0 +1,256 @@
+Please enter a MongoDB connection string (Default: mongodb://localhost/):
+
+Current Mongosh Log ID: 656437e95a3261c55061db73
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.1.0
+Using MongoDB:          7.0.3
+Using Mongosh:          2.1.0
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2023-11-22T16:10:42.946+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> show dbs
+admin       40.00 KiB
+batch20     48.00 KiB
+batch21     40.00 KiB
+config      60.00 KiB
+e-commerce  72.00 KiB
+local       40.00 KiB
+student     72.00 KiB
+test> use bookstore
+switched to db bookstore
+bookstore> show collections;
+
+bookstore> db.createCollection("Book_details");
+{ ok: 1 }
+
+bookstore> db.Bookstore.insertMany([
+...   { "book_id": 11, "Btitle": "Data Structures and Algorithms", "authors": ["Author1", "Author2"], "price": 1200, "genres": ["Programming", "Computer Science"] },
+...   { "book_id": 12, "Btitle": "Machine Learning Basics", "authors": ["Author3"], "price": 1800, "genres": ["Technology", "Machine Learning"] },
+...   { "book_id": 13, "Btitle": "Cybersecurity Essentials", "authors": ["Author4"], "price": 1500, "genres": ["Technology", "Cybersecurity"] },
+...   // Add more books as needed
+... ]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('65643faf3def25a655e2b550'),
+    '1': ObjectId('65643faf3def25a655e2b551'),
+    '2': ObjectId('65643faf3def25a655e2b552')
+  }
+}
+
+Display at least 10 details of the documents (book_id, Btitle, authors in array, and price) for all documents in the collection Bookstore:
+------------------------------------------------------------------------------------------------------------------------------------------
+
+
+bookstore> db.Bookstore.find({}, { book_id: 1, Btitle: 1, authors: 1, price: 1 }).limit(10);
+[
+  {
+    _id: ObjectId('65643faf3def25a655e2b550'),
+    book_id: 11,
+    Btitle: 'Data Structures and Algorithms',
+    authors: [ 'Author1', 'Author2' ],
+    price: 1200
+  },
+  {
+    _id: ObjectId('65643faf3def25a655e2b551'),
+    book_id: 12,
+    Btitle: 'Machine Learning Basics',
+    authors: [ 'Author3' ],
+    price: 1800
+  },
+  {
+    _id: ObjectId('65643faf3def25a655e2b552'),
+    book_id: 13,
+    Btitle: 'Cybersecurity Essentials',
+    authors: [ 'Author4' ],
+    price: 1500
+  }
+]
+
+Display the fields Btitle, authors, and price but exclude the bookid for all documents in the collection Bookstore:
+--------------------------------------------------------------------------------------------------------------------
+bookstore> db.Bookstore.find({}, { _id: 0, Btitle: 1, authors: 1, price: 1 });
+[
+  {
+    Btitle: 'Data Structures and Algorithms',
+    authors: [ 'Author1', 'Author2' ],
+    price: 1200
+  },
+  {
+    Btitle: 'Machine Learning Basics',
+    authors: [ 'Author3' ],
+    price: 1800
+  },
+  {
+    Btitle: 'Cybersecurity Essentials',
+    authors: [ 'Author4' ],
+    price: 1500
+  }
+]
+
+Display the first 3 books based on similar authors:
+----------------------------------------------------
+
+bookstore> db.Bookstore.find().sort({ authors: 1 }).limit(3);
+[
+  {
+    _id: ObjectId('65643faf3def25a655e2b550'),
+    book_id: 11,
+    Btitle: 'Data Structures and Algorithms',
+    authors: [ 'Author1', 'Author2' ],
+    price: 1200,
+    genres: [ 'Programming', 'Computer Science' ]
+  },
+  {
+    _id: ObjectId('65643faf3def25a655e2b551'),
+    book_id: 12,
+    Btitle: 'Machine Learning Basics',
+    authors: [ 'Author3' ],
+    price: 1800,
+    genres: [ 'Technology', 'Machine Learning' ]
+  },
+  {
+    _id: ObjectId('65643faf3def25a655e2b552'),
+    book_id: 13,
+    Btitle: 'Cybersecurity Essentials',
+    authors: [ 'Author4' ],
+    price: 1500,
+    genres: [ 'Technology', 'Cybersecurity' ]
+  }
+]
+
+Find the book price more than 1500:
+------------------------------------
+
+bookstore> db.Bookstore.find({ price: { $gt: 1500 } });
+[
+  {
+    _id: ObjectId('65643faf3def25a655e2b551'),
+    book_id: 12,
+    Btitle: 'Machine Learning Basics',
+    authors: [ 'Author3' ],
+    price: 1800,
+    genres: [ 'Technology', 'Machine Learning' ]
+  }
+]
+
+Find the book title whose price is more than 800 but less than 2000:
+--------------------------------------------------------------------
+
+bookstore> db.Bookstore.find({ price: { $gt: 800, $lt: 2000 } }, { Btitle: 1 });
+[
+  {
+    _id: ObjectId('65643faf3def25a655e2b550'),
+    Btitle: 'Data Structures and Algorithms'
+  },
+  {
+    _id: ObjectId('65643faf3def25a655e2b551'),
+    Btitle: 'Machine Learning Basics'
+  },
+  {
+    _id: ObjectId('65643faf3def25a655e2b552'),
+    Btitle: 'Cybersecurity Essentials'
+  }
+]
+
+Arrange the book names of the Bookstore in ascending order along with all columns:
+----------------------------------------------------------------------------------
+
+bookstore> db.Bookstore.find().sort({ Btitle: 1 });
+[
+  {
+    _id: ObjectId('65643faf3def25a655e2b552'),
+    book_id: 13,
+    Btitle: 'Cybersecurity Essentials',
+    authors: [ 'Author4' ],
+    price: 1500,
+    genres: [ 'Technology', 'Cybersecurity' ]
+  },
+  {
+    _id: ObjectId('65643faf3def25a655e2b550'),
+    book_id: 11,
+    Btitle: 'Data Structures and Algorithms',
+    authors: [ 'Author1', 'Author2' ],
+    price: 1200,
+    genres: [ 'Programming', 'Computer Science' ]
+  },
+  {
+    _id: ObjectId('65643faf3def25a655e2b551'),
+    book_id: 12,
+    Btitle: 'Machine Learning Basics',
+    authors: [ 'Author3' ],
+    price: 1800,
+    genres: [ 'Technology', 'Machine Learning' ]
+  }
+]
+
+Arrange the book names of the Bookstore in ascending order along with all columns (Same as #6):
+------------------------------------------------------------------------------------------------
+
+bookstore> db.Bookstore.find().sort({ Btitle: 1 });
+[
+  {
+    _id: ObjectId('65643faf3def25a655e2b552'),
+    book_id: 13,
+    Btitle: 'Cybersecurity Essentials',
+    authors: [ 'Author4' ],
+    price: 1500,
+    genres: [ 'Technology', 'Cybersecurity' ]
+  },
+  {
+    _id: ObjectId('65643faf3def25a655e2b550'),
+    book_id: 11,
+    Btitle: 'Data Structures and Algorithms',
+    authors: [ 'Author1', 'Author2' ],
+    price: 1200,
+    genres: [ 'Programming', 'Computer Science' ]
+  },
+  {
+    _id: ObjectId('65643faf3def25a655e2b551'),
+    book_id: 12,
+    Btitle: 'Machine Learning Basics',
+    authors: [ 'Author3' ],
+    price: 1800,
+    genres: [ 'Technology', 'Machine Learning' ]
+  }
+]
+
+Check whether the author is in the authors list:
+-------------------------------------------------
+
+bookstore> db.Bookstore.find({ authors: "AuthorName" });
+
+Update and increase the book price by Rs. 500 for all books with the name "MongoDB Practice":
+---------------------------------------------------------------------------------------------
+
+bookstore> db.Bookstore.updateMany({ Btitle: "MongoDB Practice" }, { $inc: { price: 500 } });
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+bookstore> db.Bookstore.update(
+...   { Btitle: "SomeBookTitle" },
+...   {
+...     $set: { price: 2000 },
+...     $push: { authors: "NewAuthor" },
+...     $pull: { genres: "UnwantedGenre" },
+...     $setOnInsert: { created_at: new Date() }
+...   },
+...   { upsert: true }
+... );
+DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedId: ObjectId('65644082a3939190c0525234'),
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 1
+}
+bookstore>
